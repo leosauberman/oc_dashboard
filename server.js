@@ -15,6 +15,7 @@ var port = process.env.PORT || 5000;
 
 var now = moment();
 var yesterday = moment(now).subtract(1, 'd').format('YYYY-MM-DD');
+var today = moment(now).format('YYYY-MM-DD');
 var dayLimit = moment(now).add(10, 'd').format('YYYY-MM-DD');
 var range = moment.range(yesterday, dayLimit);
 
@@ -65,6 +66,7 @@ router.get('/', cors(), (req, res, next) => {
             let projects = [];
             let taskName = [];
             let due_on = [];
+            let assignee = [];
             let completed_by;
 
             for(var id in assignments){
@@ -73,8 +75,15 @@ router.get('/', cors(), (req, res, next) => {
             for(var i in ids){
                 var _id = ids[i].toString();
                 let timeStamp = assignments[_id].due_on;
-                var temp_due_on = moment(timeStamp * 1000).format('YYYY-MM-DD');
+                if(timeStamp !== null) var temp_due_on = moment(timeStamp * 1000);//.format('YYYY-MM-DD');
+                
                 completed_by = assignments[_id].completed_by_id;
+                assignee.push(assignments[_id].assignee);
+
+                if(assignee[i] !== null && assignee[i] !== undefined && assignee[i] !== 'dcpenteado'){ 
+                    assignee[i] = assignee[i].split(" ")[0];
+                }
+                else if(assignee[i] === 'dcpenteado') assignee[i] = 'Diego';
                 /* console.log('yesterday:   ' + yesterday);
                 console.log('temp_due_on: ' + temp_due_on);
                 console.log('dayLimit:    ' + dayLimit); */
@@ -83,13 +92,27 @@ router.get('/', cors(), (req, res, next) => {
 
                 //if(moment(temp_due_on).isAfter(yesterday)){ ||| range.contains(moment(temp_due_on)) pra um range específico
                 if(completed_by == null){
-                    due_on[i] = moment(temp_due_on).format('DDD');
-                    
-                    projects.push({
-                        project: assignments[_id].project,
-                        task: taskName[i],
-                        due_on: due_on[i]
-                    });
+                    temp_due_on = moment(temp_due_on).add(3, 'h');
+                    if(moment(temp_due_on).isBefore(today)){
+                        due_on[i] = moment(temp_due_on).format('DDD');
+                        projects.push({
+                            project: assignments[_id].project,
+                            task: taskName[i],
+                            due_on: due_on[i],
+                            assignee: assignee[i],
+                            delayed: 1
+                        });    
+                    }
+                    else{
+                        due_on[i] = moment(temp_due_on).format('DDD');
+                        projects.push({
+                            project: assignments[_id].project,
+                            task: taskName[i],
+                            due_on: due_on[i],
+                            assignee: assignee[i],
+                            delayed: 0
+                        });
+                    }
                 }
             }
 

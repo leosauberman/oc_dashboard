@@ -2,14 +2,18 @@ import firebase from 'firebase';
 import React, { Component } from 'react';
 import Slide from './Slide';
 import SheetFetcher from './SheetFetcher';
-import SheetApiAuth from './SheetApiAuth';
+//import SheetApiAuth from './SheetApiAuth';
 import UserAuth from './UserAuth';
 import SlideSelector from './SlideSelector';
 import _ from 'lodash';
 import TableCreator from './TableCreator';
 
-const FULL_RELOAD_INTERVAL = 30 * 60 * 1000;
-const SLIDE_TIMEOUT = 30 * 1000;
+const FULL_RELOAD_INTERVAL    = 120 * 60 * 1000;
+const SLIDE_TIMEOUT = 
+  {
+    collab: 45 * 1000,
+    default: 15 * 1000
+  };
 
 const SLIDES = [
   {
@@ -24,7 +28,12 @@ const SLIDES = [
     name: "OC Site",
     datastudioSrc: "https://datastudio.google.com/embed/reporting/0B0XnfuW1UlB1dlFZbkFxLVpxdEU/page/VgD",
   },
+  {
+    name: "Futura Site",
+    datastudioSrc: "https://datastudio.google.com/embed/reporting/1Ze46ba1LEagkpyshEvy2ulnAodmwv8yt/page/VgD",
+  },
 ]
+const slidesLength = SLIDES.length;
 
 // firebase.initializeApp({
 //   apiKey: "AIzaSyDDEOnD0wFrZaymaxsG8WrQ_6_WpEz5Ruk",
@@ -40,8 +49,6 @@ const DB = firebase.database();
 class App extends Component {
   constructor() {
     super();
-
-    this.slidesLength = 3;
 
     this.state = {
       currentSlideIndex: 0,
@@ -69,20 +76,28 @@ class App extends Component {
     this.setState({gapi: window.gapi})
   }
 
-  createSlideTimeout() {
-    return setTimeout(() => {
-      if (this.state.currentSlideIndex === (this.slidesLength - 1)) {
+  createSlideTimeout(slideIndex) {
+    if (slideIndex === 0) {
+      return setTimeout(() => {
+        DB.ref('currentSlideIndex').set(slideIndex + 1);        
+      }, SLIDE_TIMEOUT.collab);
+    }
+    else if(slideIndex < slidesLength - 1){
+      return setTimeout(() => {
+        DB.ref('currentSlideIndex').set(slideIndex + 1);        
+      }, SLIDE_TIMEOUT.default);
+    }
+    else{
+      return setTimeout(() => {
         DB.ref('currentSlideIndex').set(0);
-      } else {
-        DB.ref('currentSlideIndex').set(this.state.currentSlideIndex + 1);
-      }
-    }, SLIDE_TIMEOUT);
+      }, SLIDE_TIMEOUT.default);
+    }
   }
 
   componentDidMount() {
     DB.ref('currentSlideIndex').on('value', (snapshot) => {
       clearTimeout(this.slideTimeout);
-      this.slideTimeout = this.createSlideTimeout();
+      this.slideTimeout = this.createSlideTimeout(snapshot.val());
       this.setState({ currentSlideIndex: snapshot.val() || 0 });
     });
   }
@@ -96,19 +111,18 @@ class App extends Component {
     this.setState({isAuth: isAuth});
     window.localStorage.setItem('isAuth', isAuth);
  }
- 
 
 
   renderSlide(slide, index) {
     if (slide.spreadsheet) {
       return(
-        <Slide key={slide.spreadsheet} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT}>
+        <Slide key={slide.spreadsheet} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
           <SheetFetcher gapi={this.state.gapi} key={slide.name} spreadsheet={slide.spreadsheet} />
         </Slide>
       )
     } else if (slide.datastudioSrc) {
       return(
-        <Slide key={slide.datastudioSrc} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT}>
+        <Slide key={slide.datastudioSrc} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
           <iframe
             src={slide.datastudioSrc}
             title={slide.name}
@@ -121,8 +135,8 @@ class App extends Component {
     }
     else if(slide.collab){
       return(
-        <Slide key={slide.collab} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT}>
-          <TableCreator key={slide.name} url='http://192.168.1.21:3101/api/' pollInterval={1200000}/>
+        <Slide key={slide.collab} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.collab}>
+          <TableCreator key={slide.name} url='http://192.168.10.18:3101/api/' pollInterval={1200000}/>
         </Slide>
       )
     }
@@ -131,7 +145,7 @@ class App extends Component {
   renderAuthenticated(){
     return(
       <div>
-        <SheetApiAuth onReady={this.onSheetApiReady.bind(this)}/>
+        {/*<SheetApiAuth onReady={this.onSheetApiReady.bind(this)}/> */}
         <SlideSelector slides={_.map(SLIDES, 'name')} onItemClick={this.onSlideSelectorItemClick} />
         { SLIDES.map((slide, i) => this.renderSlide(slide, i)) }
       </div>

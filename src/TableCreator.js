@@ -37,7 +37,9 @@ class Project extends Component {
         let data = [{
             project: "Loading",
             task: "Loading",
-            due_on: "Loading"
+            due_on: "Loading",
+            assignee: "Loading",
+            delayed: null
         }];
 
         if(this.state.data){
@@ -46,7 +48,9 @@ class Project extends Component {
                 data[i] = {
                     project: temp_data[i].project,
                     task: temp_data[i].task,
-                    due_on: moment(temp_data[i].due_on, 'DDD').format('D/MM')
+                    due_on: moment(temp_data[i].due_on, 'DDD').format('DD/MM'),
+                    assignee: temp_data[i].assignee,
+                    delayed: temp_data[i].delayed
                 }
             }
         }
@@ -58,6 +62,11 @@ class Project extends Component {
             maxWidth: 285
         },
         {
+            Header: 'ASSIGNEE',
+            accessor: 'assignee',
+            maxWidth: 155
+        },
+        {
             Header: 'TASK',
             accessor: 'task'
         },
@@ -65,6 +74,11 @@ class Project extends Component {
               Header: 'DUE ON',
               accessor: 'due_on',
               maxWidth: 120
+        },
+        {
+            Header: 'delayed',
+            accessor: 'delayed',
+            show: false
         }];
 
         return(
@@ -74,6 +88,30 @@ class Project extends Component {
                     data={data} 
                     columns={columns}
                     defaultPageSize={11}
+                    getTrProps={(state, rowInfo) => {
+                        if(rowInfo !== undefined && rowInfo.row.due_on !== "Loading"){
+                            if(rowInfo.row.delayed === 1){
+                                return {
+                                    style: {
+                                        color: 'yellow',
+                                        font: 'bold 25px Comfortaa, sans-serif'
+                                    }
+                                }
+                            }
+                            else{
+                                return {
+                                    style: {
+                                        color: 'white',
+                                        font: 'normal 22px Comfortaa, sans-serif'  
+                                    }
+                                }
+                            }
+                            
+                        }
+                        else{
+                            return {}
+                        }
+                    }}
                 />
             </div>
         );
