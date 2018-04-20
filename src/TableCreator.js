@@ -87,14 +87,14 @@ class Project extends Component {
                     className="-striped"
                     data={data} 
                     columns={columns}
-                    defaultPageSize={11}
+                    defaultPageSize={15}
                     getTrProps={(state, rowInfo) => {
                         if(rowInfo !== undefined && rowInfo.row.due_on !== "Loading"){
                             if(rowInfo.row.delayed === 1){
                                 return {
                                     style: {
                                         color: 'yellow',
-                                        font: 'bold 25px Comfortaa, sans-serif'
+                                        font: 'bold 30px Comfortaa, sans-serif'
                                     }
                                 }
                             }
@@ -102,7 +102,7 @@ class Project extends Component {
                                 return {
                                     style: {
                                         color: 'white',
-                                        font: 'normal 22px Comfortaa, sans-serif'  
+                                        font: 'normal 27px Comfortaa, sans-serif'  
                                     }
                                 }
                             }

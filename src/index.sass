@@ -48,7 +48,7 @@ body
   background-color: $purple-dark
   color: white
   min-height: 100vh
-
+  margin: 10px 0
   &.projects
     background-color: $purple-dark
     table
@@ -64,7 +64,7 @@ body
         background-color: fade_out($red-light, 0.2)
 
   table
-    min-height: 100vh
+    min-height: 100
 
     thead th:first-child
       color: transparent
@@ -135,18 +135,27 @@ body
 
   &.active
     z-index: 2000
-    display: flex
-    flex-direction: column
+    display: grid
+    grid: 100px 100px 100px / 100px 100px 100px
+    grid-gap: 20px
 
   .item
-    font-size: 22px
+    font-size: 14px
     color: white
     text-align: center
-    margin: 15px auto
-    background-color: $purple-light
-    padding: 30px 80px
-    width: 80%
+    margin-top: 100%
+    margin-right: auto
+    margin-left: auto
+    background-color: $purple-dark
+    width: 60px
+    height: 60px
     box-sizing: border-box
+    
+    img
+      object-fit: fill
+      width: 100px
+      max-width: 120%
+
 
 .user-auth
   width: 100vw
@@ -184,6 +193,12 @@ body
     
     &.isActive
       display: block
+
+.journey
+  text-align: center
+  color: white
+  font-size: 30px
+  margin: auto 30%
       
     
     

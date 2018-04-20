@@ -2,13 +2,13 @@ import firebase from 'firebase';
 import React, { Component } from 'react';
 import Slide from './Slide';
 import SheetFetcher from './SheetFetcher';
-//import SheetApiAuth from './SheetApiAuth';
 import UserAuth from './UserAuth';
 import SlideSelector from './SlideSelector';
-import _ from 'lodash';
 import TableCreator from './TableCreator';
+import Journey from './Journey';
+import _ from "lodash";
 
-const FULL_RELOAD_INTERVAL    = 120 * 60 * 1000;
+const FULL_RELOAD_INTERVAL    = 60 * 60 * 60 * 1000;
 const SLIDE_TIMEOUT = 
   {
     collab: 45 * 1000,
@@ -18,20 +18,39 @@ const SLIDE_TIMEOUT =
 const SLIDES = [
   {
     name: 'Projects',
-    collab: 'projects'
+    collab: 'projects',
+    img: 'project.png'
   },
   {
     name: "G1 Enem",
     datastudioSrc: "https://datastudio.google.com/embed/org/cysPzmPFRzuPW6vWIxtGAQ/reporting/0B0XnfuW1UlB1QzJ2RkVrZ3oyZTg/page/VgD",
+    img: 'g1.png'
   },
   {
     name: "OC Site",
     datastudioSrc: "https://datastudio.google.com/embed/reporting/0B0XnfuW1UlB1dlFZbkFxLVpxdEU/page/VgD",
+    img: 'oc.png'
   },
   {
     name: "Futura Site",
     datastudioSrc: "https://datastudio.google.com/embed/reporting/1Ze46ba1LEagkpyshEvy2ulnAodmwv8yt/page/VgD",
+    img: 'futura.jpg'
   },
+  {
+    name: "FWC Coca-Cola",
+    datastudioSrc: "https://datastudio.google.com/embed/reporting/1W_NEZhqY3JpwQU_1dZAtaJArtGkRCGVa/page/AHrD",
+    img: 'coca.png'
+  },
+  {
+    name: "Tecnomagia",
+    journey: "tecno",
+    img: 'tecno.jpg'
+  },
+  {
+    name: "Rota das Carreiras",
+    journey: "rota",
+    img: 'rota.jpg'
+  }
 ]
 const slidesLength = SLIDES.length;
 
@@ -103,7 +122,9 @@ class App extends Component {
   }
 
   onSlideSelectorItemClick(ev) {
-    let targetIndex = [].indexOf.call(ev.target.parentNode.children, ev.target);
+    console.log(_.map(SLIDES, 'name').indexOf(ev.target.alt));
+    let targetIndex = _.map(SLIDES, 'name').indexOf(ev.target.alt);
+    //let targetIndex = [].indexOf.call(ev.target.parentNode.children, ev.target);
     DB.ref('currentSlideIndex').set(targetIndex);
   }
   
@@ -120,7 +141,8 @@ class App extends Component {
           <SheetFetcher gapi={this.state.gapi} key={slide.name} spreadsheet={slide.spreadsheet} />
         </Slide>
       )
-    } else if (slide.datastudioSrc) {
+    } 
+    else if (slide.datastudioSrc) {
       return(
         <Slide key={slide.datastudioSrc} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
           <iframe
@@ -136,7 +158,21 @@ class App extends Component {
     else if(slide.collab){
       return(
         <Slide key={slide.collab} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.collab}>
-          <TableCreator key={slide.name} url='http://192.168.10.18:3101/api/' pollInterval={1200000}/>
+          <TableCreator key={slide.name} url='https://powerful-spire-68577.herokuapp.com/api' pollInterval={1200000}/>
+        </Slide>
+      )
+    }
+    else if(slide.journey === "tecno"){
+      return(
+        <Slide key={slide.journey} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
+          <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/tecno' pollInterval={1200000}/>        
+        </Slide>
+      )
+    }
+    else if(slide.journey === "rota"){
+      return(
+        <Slide key={slide.journey} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
+        <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/rota' pollInterval={1200000}/>        
         </Slide>
       )
     }
@@ -145,8 +181,8 @@ class App extends Component {
   renderAuthenticated(){
     return(
       <div>
-        {/*<SheetApiAuth onReady={this.onSheetApiReady.bind(this)}/> */}
-        <SlideSelector slides={_.map(SLIDES, 'name')} onItemClick={this.onSlideSelectorItemClick} />
+        {/*<SlideSelector slides={SLIDES} onItemClick={this.onSlideSelectorItemClick} />*/}
+        <SlideSelector slides={SLIDES} onItemClick={this.onSlideSelectorItemClick} />
         { SLIDES.map((slide, i) => this.renderSlide(slide, i)) }
       </div>
     )
