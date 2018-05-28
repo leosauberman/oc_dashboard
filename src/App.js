@@ -158,21 +158,21 @@ class App extends Component {
     else if(slide.collab){
       return(
         <Slide key={slide.collab} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.collab}>
-          <TableCreator key={slide.name} url='https://powerful-spire-68577.herokuapp.com/api' pollInterval={1200000}/>
+          <TableCreator key={slide.name} url='https://powerful-spire-68577.herokuapp.com/api' pollInterval={5400000}/>
         </Slide>
       )
     }
     else if(slide.journey === "tecno"){
       return(
         <Slide key={slide.journey} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
-          <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/tecno' pollInterval={1200000}/>        
+          <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/tecno' pollInterval={5400000}/>        
         </Slide>
       )
     }
     else if(slide.journey === "rota"){
       return(
         <Slide key={slide.journey} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
-        <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/rota' pollInterval={1200000}/>        
+        <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/rota' pollInterval={5400000}/>        
         </Slide>
       )
     }
