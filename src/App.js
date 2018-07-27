@@ -37,11 +37,6 @@ const SLIDES = [
     img: 'futura.jpg'
   },
   {
-    name: "FWC Coca-Cola",
-    datastudioSrc: "https://datastudio.google.com/embed/reporting/1W_NEZhqY3JpwQU_1dZAtaJArtGkRCGVa/page/AHrD",
-    img: 'coca.png'
-  },
-  {
     name: "Tecnomagia",
     journey: "tecno",
     img: 'tecno.jpg'
