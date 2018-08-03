@@ -224,8 +224,14 @@ class Journey extends Component{
             }
         }
         else{
+            let mystyle = {
+                color: 'white',
+                fontSize: 8 + "em",
+                marginLeft: 33 + '%',
+                marginTop: 20 + '%'
+            } 
             return(
-                <h1>LOADING</h1>
+                <h1 className="loader" style={mystyle}>LOADING</h1>
             )
         }
     }

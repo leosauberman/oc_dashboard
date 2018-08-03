@@ -36,11 +36,11 @@ const SLIDES = [
     datastudioSrc: "https://datastudio.google.com/embed/reporting/1Ze46ba1LEagkpyshEvy2ulnAodmwv8yt/page/VgD",
     img: 'futura.jpg'
   },
-  {
+  /* {
     name: "Tecnomagia",
     journey: "tecno",
     img: 'tecno.jpg'
-  },
+  }, */
   {
     name: "Rota das Carreiras",
     journey: "rota",
