@@ -48,7 +48,7 @@ class Project extends Component {
                 data[i] = {
                     project: temp_data[i].project,
                     task: temp_data[i].task,
-                    due_on: moment(temp_data[i].due_on, 'DDD').format('DD/MM'),
+                    due_on: moment(temp_data[i].due_on, 'YYDDDD').format('DD/MM/YY'),
                     assignee: temp_data[i].assignee,
                     delayed: temp_data[i].delayed
                 }
@@ -73,7 +73,7 @@ class Project extends Component {
         {
               Header: 'DUE ON',
               accessor: 'due_on',
-              maxWidth: 120
+              maxWidth: 160
         },
         {
             Header: 'delayed',

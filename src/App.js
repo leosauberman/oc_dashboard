@@ -40,12 +40,12 @@ const SLIDES = [
     name: "Tecnomagia",
     journey: "tecno",
     img: 'tecno.jpg'
-  }, */
+  }, 
   {
     name: "Rota das Carreiras",
     journey: "rota",
     img: 'rota.jpg'
-  }
+  } */
 ]
 const slidesLength = SLIDES.length;
 

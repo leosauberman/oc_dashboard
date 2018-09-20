@@ -22,3 +22,6 @@ yarn-error.log*
 
 # As we are using preprocessor, .css files should be ignored
 src/**/*.css
+
+# Deployment
+deploy.txt
