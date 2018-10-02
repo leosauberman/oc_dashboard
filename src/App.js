@@ -6,6 +6,8 @@ import UserAuth from './UserAuth';
 import SlideSelector from './SlideSelector';
 import TableCreator from './TableCreator';
 import Journey from './Journey';
+import Silence from './Silence';
+import moment from 'moment-es6';
 import _ from "lodash";
 
 const FULL_RELOAD_INTERVAL    = 60 * 60 * 60 * 1000;
@@ -36,6 +38,11 @@ const SLIDES = [
     datastudioSrc: "https://datastudio.google.com/embed/reporting/1Ze46ba1LEagkpyshEvy2ulnAodmwv8yt/page/VgD",
     img: 'futura.jpg'
   },
+  {
+    name: "Silêncio",
+    journey: "silence",
+    img: 'silence.png'
+  }
   /* {
     name: "Tecnomagia",
     journey: "tecno",
@@ -45,7 +52,7 @@ const SLIDES = [
     name: "Rota das Carreiras",
     journey: "rota",
     img: 'rota.jpg'
-  } */
+  }, */
 ]
 const slidesLength = SLIDES.length;
 
@@ -128,7 +135,6 @@ class App extends Component {
     window.localStorage.setItem('isAuth', isAuth);
  }
 
-
   renderSlide(slide, index) {
     if (slide.spreadsheet) {
       return(
@@ -167,10 +173,18 @@ class App extends Component {
     else if(slide.journey === "rota"){
       return(
         <Slide key={slide.journey} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
-        <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/rota' pollInterval={5400000}/>        
+          <Journey name={slide.name} url='https://powerful-spire-68577.herokuapp.com/api/rota' pollInterval={5400000}/>        
         </Slide>
       )
     }
+    else if(slide.journey === "silence"){
+      return(
+        <Slide key={slide.journey} isActive={this.state.currentSlideIndex === index} duration={SLIDE_TIMEOUT.default}>
+          <Silence/>        
+        </Slide>
+      )
+    }
+    
   }
   
   renderAuthenticated(){
